@@ -9,10 +9,20 @@ import "fmt"
 //find the sum of the even-valued terms.
 
 func main() {
+	var x []int
+	var sum int
 	fn := fibonacci()
-	for i := 0; i < 20; i++ {
-		fmt.Println(fn())
+	for i := 0; i < 50; i++ {
+		x = append(x, fn())
 	}
+
+	for _, a := range x {
+		if a%2 == 0 && a < 4000000 {
+			sum += a
+		}
+	}
+
+	fmt.Println(sum)
 }
 
 func fibonacci() func() int {

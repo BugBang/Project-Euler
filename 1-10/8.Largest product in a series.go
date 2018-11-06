@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"strconv"
+	"strings"
 )
 
 //The four adjacent digits in the 1000-digit number that have the greatest product
@@ -53,25 +54,24 @@ var s = `73167176531330624919225119674426574742355349194934
 71636269561882670428252483600823257530420752963450`
 
 func main() {
-
-	var temp1 int
-	var temp2 int
+	var temp int
+	var result int
+	s = strings.Replace(s, "\n", "", -1)
 	var s1 []byte = []byte(s)
-
 	lens := 13
 	for i := 0; i < len(s1)-lens+1; i++ {
 		for j := 1; j < lens; j++ {
 			if j == 1 {
-				temp1 = byte2int(s1[i]) * byte2int(s1[i+j])
+				temp = byte2int(s1[i]) * byte2int(s1[i+j])
 			} else {
-				temp1 = temp1 * byte2int(s1[i+j])
+				temp = temp * byte2int(s1[i+j])
 			}
 		}
-		if temp1 > temp2 {
-			temp2 = temp1
+		if temp > result {
+			result = temp
 		}
 	}
-	fmt.Println(temp2)
+	fmt.Println(result)
 }
 
 func byte2int(buf byte) int {

@@ -1,6 +1,13 @@
 package main
 
-//In the 20×20 grid below, four numbers along a diagonal line have been marked in red.
+import (
+	"fmt"
+	"io/ioutil"
+	"sort"
+	"strings"
+)
+
+//In the 20×20 grids below, four numbers along a diagonal line have been marked in red.
 //
 //08 02 22 97 38 15 00 40 00 75 04 05 07 78 52 12 50 77 91 08
 //49 49 99 40 17 81 18 57 60 87 17 40 98 43 69 48 04 56 62 00
@@ -25,7 +32,126 @@ package main
 //
 //The product of these numbers is 26 × 63 × 78 × 14 = 1788696.
 //What is the greatest product of four adjacent numbers in the same direction
-//(up, down, left, right, or diagonally) in the 20×20 grid?
-func main() {
+//(up, down, left, right, or diagonally) in the 20×20 grids?
+type point struct {
+	i, j int
+}
 
+var emptyPoint = point{-1, -1}
+
+func (p point) left2right(grids [][]int) int {
+	if p.j+1 > len(grids[p.i])-1 || p.j+2 > len(grids[p.i])-1 || p.j+3 > len(grids[p.i])-1 {
+		return -1
+	}
+	return p.at(grids) * p.right1().at(grids) * p.right2().at(grids) * p.right3().at(grids)
+}
+
+func (p point) up2down(grids [][]int) int {
+	if p.i+1 > len(grids)-1 || p.i+2 > len(grids)-1 || p.i+3 > len(grids)-1 {
+		return -1
+	}
+	return p.at(grids) * p.bottom1().at(grids) * p.bottom2().at(grids) * p.bottom3().at(grids)
+}
+
+func (p point) diagonal1(grids [][]int) int {
+	if p.i+1 > len(grids)-1 || p.i+2 > len(grids)-1 ||
+		p.i+3 > len(grids)-1 || p.j+1 > len(grids[p.i])-1 ||
+		p.j+2 > len(grids[p.i])-1 || p.j+3 > len(grids[p.i])-1 {
+		return -1
+	}
+	return p.at(grids) * p.bottomRight1().at(grids) * p.bottomRight2().at(grids) * p.bottomRight3().at(grids)
+}
+
+func (p point) diagonal2(grids [][]int) int {
+	if p.i+1 > len(grids)-1 || p.i+2 > len(grids)-1 ||
+		p.i+3 > len(grids)-1 || p.j-1 < 0 ||
+		p.j-2 < 0 || p.j-3 < 0 {
+		return -1
+	}
+	return p.at(grids) * p.bottomLeft1().at(grids) * p.bottomLeft2().at(grids) * p.bottomLeft3().at(grids)
+}
+
+func (p point) at(grids [][]int) int {
+	return grids[p.i][p.j]
+}
+
+func (p point) right1() point {
+	return point{p.i, p.j + 1}
+}
+func (p point) right2() point {
+	return point{p.i, p.j + 2}
+}
+func (p point) right3() point {
+	return point{p.i, p.j + 3}
+}
+
+func (p point) bottomRight1() point {
+	return point{p.i + 1, p.j + 1}
+}
+func (p point) bottomRight2() point {
+	return point{p.i + 2, p.j + 3}
+}
+func (p point) bottomRight3() point {
+	return point{p.i + 3, p.j + 3}
+}
+
+func (p point) bottom1() point {
+	return point{p.i + 1, p.j}
+}
+func (p point) bottom2() point {
+	return point{p.i + 2, p.j}
+}
+func (p point) bottom3() point {
+	return point{p.i + 3, p.j}
+}
+
+func (p point) bottomLeft1() point {
+	return point{p.i + 1, p.j - 1}
+}
+func (p point) bottomLeft2() point {
+	return point{p.i + 2, p.j - 2}
+}
+func (p point) bottomLeft3() point {
+	return point{p.i + 3, p.j - 3}
+}
+
+func readData(path string) [][]int {
+	file, _ := ioutil.ReadFile(path)
+	a := strings.Replace(string(file), "\r\n", " ", -1)
+	reader := strings.NewReader(a)
+
+	data := make([][]int, 20)
+	for i := range data {
+		data[i] = make([]int, 20)
+		for j := range data[i] {
+			fmt.Fscanf(reader, "%d", &data[i][j])
+		}
+	}
+	for _, row := range data {
+		for _, col := range row {
+			fmt.Printf("%d\t", col)
+		}
+		fmt.Println()
+	}
+	return data
+}
+
+func main() {
+	var result []int
+	data := readData("code_kata/Project-Euler/11-20/11data")
+	var points []point
+	for i := 0; i < 20; i++ {
+		for j := 0; j < 20; j++ {
+			points = append(points, point{i, j})
+		}
+	}
+
+	for _, value := range points {
+		result = append(result, value.left2right(data))
+		result = append(result, value.up2down(data))
+		result = append(result, value.diagonal1(data))
+		result = append(result, value.diagonal2(data))
+	}
+	sort.Ints(result)
+	fmt.Println(result[len(result)-1])
 }
