@@ -1,5 +1,13 @@
 package main
 
+import (
+	"bufio"
+	"fmt"
+	"io"
+	"os"
+	"strconv"
+)
+
 //Work out the first ten digits of the sum of the following one-hundred 50-digit numbers.
 //
 //37107287533902102798797998220837590246510135740250
@@ -103,5 +111,35 @@ package main
 //20849603980134001723930671666823555245252804609722
 //53503534226472524250874054075591789781264330331690
 func main() {
+	data := readData1("code_kata/Project-Euler/11-20/13data")
+	var ints []int
+	for _, v := range data {
+		temp, _ := strconv.Atoi(v[:10])
+		ints = append(ints, temp)
+	}
+	result := 0
+	for _, v := range ints {
+		fmt.Println(v)
+		result += v
+	}
+	println(result)
+}
 
+func readData1(path string) []string {
+	fi, err := os.Open(path)
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return nil
+	}
+	defer fi.Close()
+	var result []string
+	br := bufio.NewReader(fi)
+	for {
+		a, _, c := br.ReadLine()
+		if c == io.EOF {
+			break
+		}
+		result = append(result, string(a))
+	}
+	return result
 }
