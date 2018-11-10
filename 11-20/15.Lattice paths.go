@@ -7,6 +7,10 @@ package main
 //How many such routes are there through a 20×20 grid?
 
 func main() {
+	method1()
+}
+
+func method1() {
 	grid := make([][]uint64, 41)
 	for i := 0; i < 41; i++ {
 		grid[i] = make([]uint64, 41)
@@ -19,4 +23,5 @@ func main() {
 		}
 	}
 	println(grid[40][20])
+	close()
 }
