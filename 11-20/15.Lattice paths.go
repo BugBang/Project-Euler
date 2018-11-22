@@ -23,5 +23,5 @@ func method1() {
 		}
 	}
 	println(grid[40][20])
-	close()
+
 }
