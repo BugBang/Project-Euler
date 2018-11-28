@@ -1,5 +1,10 @@
 package main
 
+import (
+	"fmt"
+	"math/big"
+)
+
 //一千位斐波那契数
 //斐波那契数列是按如下递归关系定义的数列：
 //F1 = 1 F2 = 1
@@ -23,5 +28,27 @@ package main
 //
 //在斐波那契数列中，第一个有1000位数字的是第几项？
 func main() {
+	var (
+		fibNum *big.Int
+		count  int
+	)
+	fn := fibonacci()
+	for {
+		fibNum = fn()
+		count++
+		if len(fibNum.String()) >= 1000 {
+			goto forend
+		}
+	}
+forend:
+	fmt.Println(count - 1)
 
+}
+
+func fibonacci() func() *big.Int {
+	a, b := big.NewInt(int64(-1)), big.NewInt(int64(1))
+	return func() *big.Int {
+		a, b = b, a.Add(a, b)
+		return b
+	}
 }
