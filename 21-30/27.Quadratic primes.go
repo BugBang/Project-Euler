@@ -1,5 +1,7 @@
 package main
 
+import "math"
+
 //二次“素数生成”多项式
 //
 //欧拉发现了这个著名的二次多项式：
@@ -11,12 +13,41 @@ package main
 //
 //考虑以下形式的二次多项式：
 //
-//n2 + an + b, 满足|a| < 1000且|b| < 1000
+//n**2 + an + b, 满足|a| < 1000且|b| < 1000
 //
 //其中|n|指n的模或绝对值
 //例如|11| = 11以及|−4| = 4
 //
 //这其中存在某个二次多项式能够对从0开始尽可能多的连续整数n都生成素数，求其系数a和b的乘积。
 func main() {
+	var maxCounter, aInMax, bInMax int
+	maxCounter = 0
+	for a := -999; a < 1000; a++ {
+		for b := -999; b < 1000; b++ {
+		inner:
+			for n := 0; ; n++ {
+				if !isPrime(n*n + a*n + b) {
+					if n > maxCounter {
+						maxCounter, aInMax, bInMax = n, a, b
+					}
+					break inner
+				}
+			}
+		}
+	}
+	println(aInMax * bInMax)
+}
 
+func isPrime(in int) bool {
+	limit := int(math.Sqrt(float64(in)))
+	if in < 2 || in%2 == 0 {
+		return false
+	} else {
+		for i := 2; i < limit; i++ {
+			if in%i == 0 {
+				return false
+			}
+		}
+	}
+	return true
 }
