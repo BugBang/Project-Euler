@@ -14,5 +14,29 @@ package main
 //
 //找出所有可以写成它们各位数字的五次幂之和的数，并求这些数的和。
 func main() {
+	var (
+		limit int
+		sum   int
+	)
+	limit = 9 * 9 * 9 * 9 * 9 * 5
+	for i := 11; i < limit; i++ {
+		if i == sumOfFifthPowers(i) {
+			sum += i
+		}
+	}
+	println(sum)
 
+}
+
+func fifthPower(num int) int {
+	return num * num * num * num * num
+}
+
+func sumOfFifthPowers(num int) int {
+	sum := 0
+	for num > 0 {
+		sum += fifthPower(num % 10)
+		num /= 10
+	}
+	return sum
 }
