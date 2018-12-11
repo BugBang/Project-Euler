@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 //消去数字的分数
 //
 //49/98是一个有趣的分数，因为缺乏经验的数学家可能在约简时错误地认为，等式49/98 = 4/8之所以成立，是因为在分数线上下同时抹除了9的缘故。
@@ -11,5 +13,18 @@ package main
 //将这四个分数的乘积写成最简分数，求此时分母的值。
 
 func main() {
-
+	var i, j, k, ki, ij int
+	result := 1.0
+	for i = 1; i < 10; i++ {
+		for j = 1; j < i; j++ {
+			for k = 1; k < j; k++ {
+				ki = 10*k + i
+				ij = 10*i + j
+				if ki*j == ij*k {
+					result *= float64(ij) / float64(ki)
+				}
+			}
+		}
+	}
+	fmt.Println(int(result))
 }
